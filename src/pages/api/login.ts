@@ -20,7 +20,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
 
         await compare(req.body.password, person.password, function (err, result) {
             if (!err && result) {
-                const claims = {sub: person.id, myPersonEmail: person.email};
+                const claims = {sub: person.email};
                 const jwt = sign(claims, secret, {expiresIn: '1h'});
                 res.setHeader('Set-Cookie', cookie.serialize('auth', jwt, {
                     httpOnly: true,
@@ -29,7 +29,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
                     maxAge: 3600,
                     path: '/'
                 }));
-                res.json({authToken: jwt});
+                res.json({message: 'Welcome Back, ' + person.name});
             } else {
                 res.json({message: "no"});
             }
